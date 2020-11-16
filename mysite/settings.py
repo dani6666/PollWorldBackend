@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'corsheaders',
     'social_django',
     'rest_social_auth',
 
@@ -48,7 +49,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -148,3 +149,8 @@ REST_FRAMEWORK = {
 SOCIAL_AUTH_FACEBOOK_KEY = 'your app client id'
 SOCIAL_AUTH_FACEBOOK_SECRET = 'your app client secret'
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', ]
+
+# we whitelist localhost:3000 because that's where frontend will be served
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3000'
+]
