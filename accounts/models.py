@@ -34,7 +34,7 @@ class CustomUser(AbstractUser):
     place_of_residence = models.IntegerField(choices=PlaceOfResidence.choices, null=True)
     growth = models.IntegerField(null=True)
     weight = models.IntegerField(null=True)
-    level_of_fitness = models.IntegerField(null=True, validators=[MaxValueValidator(5), MinValueValidator(5)])
+    level_of_fitness = models.IntegerField(null=True, validators=[MinValueValidator(1), MaxValueValidator(5)])
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     username = None
