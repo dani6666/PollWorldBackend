@@ -28,11 +28,7 @@ class ChangeUserView(generics.UpdateAPIView):
             serializer = self.get_serializer(data=request.data)
 
             if serializer.is_valid():
-                
-                if serializer.data.get("age") is not None:
-                    self.object.age = serializer.data.get("age")
-                if serializer.data.get("hobby") is not None:
-                    self.object.hobby = serializer.data.get("hobby")
+
                 self.object.save()
                 response = {
                     'status': 'success',
@@ -44,3 +40,52 @@ class ChangeUserView(generics.UpdateAPIView):
                 return Response(response)
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChangePersonalDataView(generics.UpdateAPIView):
+    """
+    An endpoint for changing personal user data.
+    """
+    serializer_class = UserSerializer
+    model = CustomUser
+
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+
+            if serializer.data.get("name") is not None:
+                self.object.name = serializer.data.get("name")
+            if serializer.data.get("age") is not None:
+                self.object.age = serializer.data.get("age")
+            if serializer.data.get("sex") is not None:
+                self.object.sex = serializer.data.get("sex")
+            if serializer.data.get("profession") is not None:
+                self.object.profession = serializer.data.get("profession")
+            if serializer.data.get("place_of_residence") is not None:
+                self.object.place_of_residence = serializer.data.get("place_of_residence")
+            if serializer.data.get("growth") is not None:
+                self.object.growth = serializer.data.get("growth")
+            if serializer.data.get("weight") is not None:
+                self.object.weight = serializer.data.get("weight")
+            if serializer.data.get("level_of_fitness") is not None:
+                self.object.level_of_fitness = serializer.data.get("level_of_fitness")
+
+            self.object.save()
+            response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'Personal data updated successfully',
+                'data': []
+            }
+
+            return Response(response)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

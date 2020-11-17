@@ -9,7 +9,6 @@ from django.contrib.auth.hashers import make_password
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
-
     def validate(self, attrs):
         data = super(MyTokenObtainPairSerializer, self).validate(attrs)
 
@@ -35,18 +34,21 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('id','email','password')
+        fields = ('id', 'email', 'password')
         extra_kwargs = {
-            'password':{'write_only': True},
+            'password': {'write_only': True},
         }
+
     def create(self, validated_data):
         user = CustomUser.objects.create_user(
             validated_data['email'],
-            password = validated_data['password'],
+            password=validated_data['password'],
         )
         return user
+
+
 # User serializer
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['age']
+        fields = ['name', 'age', 'sex', 'profession', 'place_of_residence', 'growth', 'weight', 'level_of_fitness']
