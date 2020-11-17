@@ -11,6 +11,6 @@ urlpatterns = [
     path('api/login/', include('rest_social_auth.urls_jwt_pair')),
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('modify_user/', ChangeUserView.as_view()),
+    path('modify_user/', ChangeUserView.as_view()),#test
     path('accounts/', include("accounts.urls")),
 ]
