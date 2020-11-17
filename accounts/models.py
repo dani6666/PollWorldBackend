@@ -27,10 +27,10 @@ class CustomUser(AbstractUser):
         CITY = 2
         METROPOLIS = 3
     email = models.EmailField(validators=[EmailValidator], verbose_name='email', max_length=255, unique=True)
-    name = models.CharField(max_length=50, blank=True)
+    name = models.CharField(max_length=50, null=True)
     age = models.IntegerField(null=True)
-    sex = models.NullBooleanField()
-    profession = models.CharField(max_length=50, blank=True)
+    sex = models.BooleanField(null=True)
+    profession = models.CharField(max_length=50, null=True)
     place_of_residence = models.IntegerField(choices=PlaceOfResidence.choices, null=True)
     growth = models.IntegerField(null=True)
     weight = models.IntegerField(null=True)

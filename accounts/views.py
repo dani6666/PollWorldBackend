@@ -48,7 +48,7 @@ class ChangePersonalDataView(generics.UpdateAPIView):
     serializer_class = UserSerializer
     model = CustomUser
 
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
     def get_object(self, queryset=None):
         obj = self.request.user
@@ -84,6 +84,46 @@ class ChangePersonalDataView(generics.UpdateAPIView):
             'code': status.HTTP_200_OK,
             'message': 'Personal data updated successfully',
             'data': []
+        }
+
+        return Response(response)
+
+class GetPersonalDataView(generics.RetrieveAPIView):
+    """
+    An endpoint for changing personal user data.
+    """
+    serializer_class = UserSerializer
+    model = CustomUser
+
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        response = {
+            'status': 'success',
+            'code': status.HTTP_200_OK,
+            'message': 'Personal data updated successfully',
+            'data': [
+                {
+                    'name': self.object.name,
+                    'age': self.object.age,
+                    'sex': self.object.sex,
+                    'profession': self.object.profession,
+                    'place_of_residence': self.object.place_of_residence,
+                    'growth': self.object.growth,
+                    'weight': self.object.weight,
+                    'level_of_fitness': self.object.level_of_fitness
+                }
+            ]
         }
 
         return Response(response)
