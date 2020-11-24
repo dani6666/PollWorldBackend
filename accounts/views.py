@@ -48,7 +48,7 @@ class ChangePersonalDataView(generics.UpdateAPIView):
     serializer_class = UserSerializer
     model = CustomUser
 
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, queryset=None):
         obj = self.request.user
@@ -95,7 +95,7 @@ class GetPersonalDataView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     model = CustomUser
 
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, queryset=None):
         obj = self.request.user
