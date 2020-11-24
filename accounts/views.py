@@ -95,7 +95,7 @@ class GetPersonalDataView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     model = CustomUser
 
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def get_object(self, queryset=None):
         obj = self.request.user
@@ -112,18 +112,7 @@ class GetPersonalDataView(generics.RetrieveAPIView):
             'status': 'success',
             'code': status.HTTP_200_OK,
             'message': 'Personal data updated successfully',
-            'data': [
-                {
-                    'name': self.object.name,
-                    'age': self.object.age,
-                    'sex': self.object.sex,
-                    'profession': self.object.profession,
-                    'place_of_residence': self.object.place_of_residence,
-                    'growth': self.object.growth,
-                    'weight': self.object.weight,
-                    'level_of_fitness': self.object.level_of_fitness
-                }
-            ]
+            'data': self.object.to_json()
         }
 
         return Response(response)
