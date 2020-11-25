@@ -88,6 +88,7 @@ class ChangePersonalDataView(generics.UpdateAPIView):
 
         return Response(response)
 
+
 class GetPersonalDataView(generics.RetrieveAPIView):
     """
     An endpoint for changing personal user data.
