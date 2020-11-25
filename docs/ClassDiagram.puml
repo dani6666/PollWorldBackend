@@ -1,0 +1,67 @@
+@startuml
+class Pools{
+    int: Id
+    int: OrganizationId
+}
+Pools "1" -- "0..*" PoolAssignments
+Pools "1" -- "1..*" Questions
+
+class Users{
+    int: Id
+}
+Users "1" -- "0..*" PoolAssignments
+Users "1" -- "0..*" Answers
+
+class Organizations{
+    int: id
+}
+Organizations"1" -- "0..*" Pools
+
+class PoolAssignments{
+    int: userId
+    int: poolId
+    datetime: assignedDate
+    datetime: completedDate
+}
+
+class Questions{
+    int: id
+    int: typeId
+    varchar: text
+}
+Questions "1" --- "0..*" QuestionOptions
+Questions "1" -- "0..*" CustomQuestionAnswers
+Questions "1..*" - "1" QuestionTypes
+
+class QuestionTypes{
+    int: id
+    string: type
+}
+
+class Options{
+    int: id
+    varchar: text
+}
+Options "1" - "1..*" QuestionOptions
+
+class QuestionOptions{
+    int: id
+    int: optionId
+    int: questionId
+}
+
+class CustomQuestionAnswers{
+    int: id
+    int: questionId
+    varchar: answerText
+    int: answerNumber
+}
+
+class Answers{
+    int: userId
+    int: questionOptionId
+    int: customQuestionAnswerId
+}
+Answers "1" --- "0..*" QuestionOptions
+Answers "1" -- "0..*" CustomQuestionAnswers
+@enduml
