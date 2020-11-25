@@ -116,4 +116,3 @@ class GetPersonalDataView(generics.RetrieveAPIView):
         }
 
         return Response(response)
-
