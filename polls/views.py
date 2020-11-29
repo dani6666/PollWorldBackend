@@ -1,0 +1,122 @@
+from django.views import View
+from django.http import HttpResponse
+import datetime
+
+from polls.models import *
+from accounts.views import CustomUser
+
+# Create your views here.
+
+def get_user():
+        users = CustomUser.objects.all()
+        if users.count() == 0:
+            CustomUser.objects.create_user("mail@gmail.com")
+            users = CustomUser.objects.all()
+        return users[0]
+
+def get_organizations():
+    orgs = Organization.objects.all()
+    count = orgs.count()
+    if count < 5:
+        while count < 5:
+            org = Organization(name="sample org" + str(count))
+            org.save()
+            count += 1
+        orgs = Organization.objects.all()
+    return orgs[0:5]
+
+def create_polls(user: CustomUser):
+    orgs = get_organizations()
+    for i in range(5):
+        poll = Poll(name="sample poll" + str(i), organization=orgs[i], description="description", time_needed=datetime.time(0, 5 + i, 0), rating=3.6)
+        poll.save()
+
+        question = Question(poll=poll, type=0, text="single choice question")
+        question.save()
+
+        option = QuestionOption(question=question, option="option1")
+        option.save()
+
+        option = QuestionOption(question=question, option="option2")
+        option.save()
+
+        question = Question(poll=poll, type=1, text="multi choice question")
+        question.save()
+
+        option = QuestionOption(question=question, option="option1")
+        option.save()
+
+        option = QuestionOption(question=question, option="option2")
+        option.save()
+
+        question = Question(poll=poll, type=2, text="open question")
+        question.save()
+
+        assignment = PollAssignment(user=user, poll=poll, assigned_date=datetime.datetime.now(), completed_date=None)
+        assignment.save()
+
+def get_poll():
+    user = get_user()
+
+    polls = user.assigned_polls.all()
+    if polls.count() == 0:
+        create_polls(user)
+        polls = user.assigned_polls.all()
+
+    return polls[0]
+
+
+class GetPollsSummary(View):
+    def get(self, request):
+        user: CustomUser = get_user()
+
+        polls = user.assigned_polls.all()
+        if polls.count() == 0:
+            create_polls(user)
+            polls = user.assigned_polls.all()
+
+        response = []
+
+        for poll in polls:
+            response.append({
+                'id': poll.pk,
+                'organization': poll.organization.name,
+                'name': poll.name,
+                'time_needed': str(poll.time_needed),
+                'description': poll.description,
+                'rating': poll.rating
+            })
+
+        return HttpResponse(str(response))
+
+class GetPoll(View):
+    def get(self, request):
+        poll = get_poll()
+    
+        questions = []
+
+        for q in poll.questions.all():
+            options = []
+            for o in q.options.all():
+                options.append({
+                    'id': o.pk,
+                    'option': o.option
+                })
+            questions.append({
+                'id': q.pk,
+                'type': q.get_type_display(),
+                'text': q.text,
+                'options': options
+            })
+
+        response = {
+            'id': poll.pk,
+            'organization': poll.organization.name,
+            'name': poll.name,
+            'time_needed': str(poll.time_needed),
+            'description': poll.description,
+            'rating': poll.rating,
+            'questions': questions
+        }
+
+        return HttpResponse(str(response))
