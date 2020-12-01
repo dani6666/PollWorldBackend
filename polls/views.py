@@ -5,6 +5,7 @@ import datetime
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from polls.models import *
 from accounts.views import CustomUser
@@ -80,17 +81,19 @@ class GetUserPolls(generics.RetrieveAPIView):
                 'rating': poll.rating
             })
 
-        return HttpResponse(str(response))
+        return Response(response)
 
 
-class GetPoll(View):
+class GetPoll(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, poll_id):
         try:
             poll = Poll.objects.get(pk=poll_id)
         except:
             return HttpResponse("No poll with specified id") #TODO change
 
-        if not request.user in poll.assigned_users.all():
+        if not self.request.user in poll.assigned_users.all():
             return HttpResponse("Poll is not available for current user") #TODO change
     
         questions = []
@@ -119,4 +122,4 @@ class GetPoll(View):
             'questions': questions
         }
 
-        return HttpResponse(str(response))
+        return Response(response)

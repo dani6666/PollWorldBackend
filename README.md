@@ -8,5 +8,5 @@ Endpoints:
   - /accounts/api/update/ (PUT) - update user personal data
   - /accounts/api/change-pass/ - change user password (TBA)
   - /api/login/social/jwt-pair/ - login with facebook
-  - /polls/all - get poll for current user
+  - /polls/all - get polls for current user
   - /polls/{id} - get poll with id
