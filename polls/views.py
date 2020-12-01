@@ -1,5 +1,6 @@
 from django.views import View
 from django.http import HttpResponse
+
 import datetime
 
 from polls.models import *
@@ -7,25 +8,19 @@ from accounts.views import CustomUser
 
 # Create your views here.
 
-def get_user():
-        users = CustomUser.objects.all()
-        if users.count() == 0:
-            CustomUser.objects.create_user("mail@gmail.com")
-            users = CustomUser.objects.all()
-        return users[0]
-
-def get_organizations():
-    orgs = Organization.objects.all()
-    count = orgs.count()
-    if count < 5:
-        while count < 5:
-            org = Organization(name="sample org" + str(count))
-            org.save()
-            count += 1
-        orgs = Organization.objects.all()
-    return orgs[0:5]
-
+#create polls for testing
 def create_polls(user: CustomUser):
+    def get_organizations():
+        orgs = Organization.objects.all()
+        count = orgs.count()
+        if count < 5:
+            while count < 5:
+                org = Organization(name="sample org" + str(count))
+                org.save()
+                count += 1
+            orgs = Organization.objects.all()
+        return orgs[0:5]
+
     orgs = get_organizations()
     for i in range(5):
         poll = Poll(name="sample poll" + str(i), organization=orgs[i], description="description", time_needed=datetime.time(0, 5 + i, 0), rating=3.6)
@@ -55,23 +50,16 @@ def create_polls(user: CustomUser):
         assignment = PollAssignment(user=user, poll=poll, assigned_date=datetime.datetime.now(), completed_date=None)
         assignment.save()
 
-def get_poll():
-    user = get_user()
 
-    polls = user.assigned_polls.all()
-    if polls.count() == 0:
-        create_polls(user)
-        polls = user.assigned_polls.all()
-
-    return polls[0]
-
-
-class GetPollsSummary(View):
+class GetUserPolls(View):
     def get(self, request):
-        user: CustomUser = get_user()
+        user = request.user
 
-        polls = user.assigned_polls.all()
-        if polls.count() == 0:
+        if not user.is_authenticated:
+            return HttpResponse("User not logged in") #TODO change
+
+        polls = user.assigned_polls.filter(pollassignment__completed_date__isnull=True)
+        if polls.count() == 0: #TODO return "no polls available for user"
             create_polls(user)
             polls = user.assigned_polls.all()
 
@@ -89,9 +77,16 @@ class GetPollsSummary(View):
 
         return HttpResponse(str(response))
 
+
 class GetPoll(View):
-    def get(self, request):
-        poll = get_poll()
+    def get(self, request, poll_id):
+        try:
+            poll = Poll.objects.get(pk=poll_id)
+        except:
+            return HttpResponse("No poll with specified id") #TODO change
+
+        if not request.user in poll.assigned_users.all():
+            return HttpResponse("Poll is not available for current user") #TODO change
     
         questions = []
 

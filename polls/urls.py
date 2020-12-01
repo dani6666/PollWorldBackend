@@ -1,9 +1,9 @@
 from django.conf.urls import url
 from django.urls import path, include
 
-from .views import GetPollsSummary, GetPoll
+from .views import GetUserPolls, GetPoll
 
 urlpatterns = [
-      path('summary/', GetPollsSummary.as_view()),
-      path('poll/', GetPoll.as_view())
+      path('all/', GetUserPolls.as_view()),
+      path('<int:poll_id>/', GetPoll.as_view())
 ]
