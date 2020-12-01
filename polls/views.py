@@ -3,6 +3,9 @@ from django.http import HttpResponse
 
 import datetime
 
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+
 from polls.models import *
 from accounts.views import CustomUser
 
@@ -51,10 +54,12 @@ def create_polls(user: CustomUser):
         assignment.save()
 
 
-class GetUserPolls(View):
-    def get(self, request):
-        user = request.user
+class GetUserPolls(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
 
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        print(user)
         if not user.is_authenticated:
             return HttpResponse("User not logged in") #TODO change
 
