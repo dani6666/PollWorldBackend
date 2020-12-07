@@ -120,7 +120,8 @@ definitions:
       profession:
         type: string
       place_of_residence:
-        type: string
+        type: integer
+        enum: [1,2,3]
       growth:
         type: integer
       weight:
