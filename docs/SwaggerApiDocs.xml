@@ -9,7 +9,7 @@ produces:
   - "application/json"
 paths:
   /token:
-    get:
+    post:
       summary: "Log in user"
       operationId: "logInUser"
       tags:
@@ -23,13 +23,13 @@ paths:
           $ref: "#/definitions/UserCredentials"
       responses:
         "200":
-          description: 'Sample response: JWT tokens for a user'
+          description: 'JWT tokens for a user'
           schema:
             $ref: '#/definitions/Jwt'
         '401':
           description: Wrong email or password
   /token/refresh:
-    get:
+    post:
       summary: 'Refresh access token based on refresh token'
       operationId: refreshToken
       tags:
@@ -43,13 +43,13 @@ paths:
             type: string
       responses:
         '200':
-          description: 'Sample response: JWT tokens for a user'
+          description: 'Access token for a user'
           schema:
             $ref: '#/definitions/JwtAccess'
         '401':
           description: Wrong refresh token
   /accounts/register:
-    put:
+    post:
       summary: 'Register a user'
       operationId: registerUser
       tags:
@@ -64,6 +64,24 @@ paths:
           description: 'User registered successfully'
         '400':
           description: 'Email already exists/is invalid'
+  /accounts/get:
+    get:
+      summary: 'Gets user personal data (without password)'
+      operationId: getUser
+      tags:
+        - user
+      parameters:
+      - in: "header"
+        name: "Authorization"
+        type: "string"
+        description: "e.g. Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA3MzMzOTAwLCJqdGkiOiJmMWRiY2EzYzRiMTU0NTg5YTA1ZGRiZTY4M2QyZDA3MyIsInVzZXJfaWQiOjF9.5qBocwFvBvF791POe8sETBECis0GCcRTWHPSNvABtXw"
+      responses:
+        '200':
+          description: 'User retrieved successfully'
+          schema:
+            $ref: '#/definitions/UserPersonalData'
+        '401':
+          description: Wrong refresh token
   /accounts/update:
     put:
       summary: 'Updates user personal data (without password)'
