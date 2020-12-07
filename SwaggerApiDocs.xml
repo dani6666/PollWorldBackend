@@ -1,0 +1,130 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: PollWorldApi
+host: "127.0.0.1:8000"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /token:
+    get:
+      summary: "Log in user"
+      operationId: "logInUser"
+      tags:
+        - user
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/UserCredentials"
+      responses:
+        "200":
+          description: 'Sample response: JWT tokens for a user'
+          schema:
+            $ref: '#/definitions/Jwt'
+        '401':
+          description: Wrong email or password
+  /token/refresh:
+    get:
+      summary: 'Refresh access token based on refresh token'
+      operationId: refreshToken
+      tags:
+        - user
+      parameters:
+      - name: refresh
+        in: body
+        description: refresh token
+        required: true
+        schema:
+            type: string
+      responses:
+        '200':
+          description: 'Sample response: JWT tokens for a user'
+          schema:
+            $ref: '#/definitions/JwtAccess'
+        '401':
+          description: Wrong refresh token
+  /accounts/register:
+    put:
+      summary: 'Register a user'
+      operationId: registerUser
+      tags:
+        - user
+      parameters:
+      - in: "body"
+        name: "body"
+        schema:
+          $ref: '#/definitions/UserCredentials'
+      responses:
+        '200':
+          description: 'User registered successfully'
+        '400':
+          description: 'Email already exists/is invalid'
+  /accounts/update:
+    put:
+      summary: 'Updates user personal data (without password)'
+      operationId: updateUser
+      tags:
+        - user
+      parameters:
+      - in: "header"
+        name: "Authorization"
+        type: "string"
+        description: "e.g. Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA3MzMzOTAwLCJqdGkiOiJmMWRiY2EzYzRiMTU0NTg5YTA1ZGRiZTY4M2QyZDA3MyIsInVzZXJfaWQiOjF9.5qBocwFvBvF791POe8sETBECis0GCcRTWHPSNvABtXw"
+      - in: "body"
+        name: "body"
+        schema:
+          $ref: '#/definitions/UserPersonalData'
+      responses:
+        '200':
+          description: 'User updated successfully'
+        '401':
+          description: Wrong refresh token
+definitions:
+  UserCredentials:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+  Jwt:
+      type: object
+      properties:
+        refresh:
+          type: string
+        access:
+          type: string
+        user:
+          type: string
+        id:
+          type: integer
+  JwtAccess:
+    type: object
+    properties:
+      access:
+        type: string
+  UserPersonalData:
+    type: object
+    properties:
+      name:
+        type: string
+      age:
+        type: integer
+      sex:
+        type: boolean
+      profession:
+        type: string
+      place_of_residence:
+        type: string
+      growth:
+        type: integer
+      weight:
+        type: integer
+      level_of_fitness:
+        type: integer
+        enum: [1,2,3,4,5]
