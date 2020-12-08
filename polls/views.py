@@ -41,23 +41,23 @@ def create_polls(user: CustomUser):
         poll = Poll(name="Ankieta nr: " + str(i), company=orgs[i], price=random.randint(10, 50) * 10, category=categories[i], short_description="Krótki opis", description="Długi opis ankiety", time_needed=datetime.time(0, random.randint(5, 15), 0), rating=random.uniform(1, 5))
         poll.save()
 
+        option = QuestionOption(option="Opcja 1")
+        option.save()
+
+        option2 = QuestionOption(option="Opcja 2")
+        option2.save()
+
         question = Question(poll=poll, type=0, text="Pytanie jednokrotnego wyboru")
         question.save()
 
-        option = QuestionOption(question=question, option="Opcja 1")
-        option.save()
-
-        option = QuestionOption(question=question, option="Opcja 2")
-        option.save()
+        question.options.add(option)
+        question.options.add(option2)
 
         question = Question(poll=poll, type=1, text="Pytanie wielokrotnego wyboru")
         question.save()
 
-        option = QuestionOption(question=question, option="Opcja 1")
-        option.save()
-
-        option = QuestionOption(question=question, option="Opcja 2")
-        option.save()
+        question.options.add(option)
+        question.options.add(option2)
 
         question = Question(poll=poll, type=2, text="Pytanie otwarte")
         question.save()
@@ -71,9 +71,6 @@ class GetUserPolls(generics.RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
-        print(user)
-        if not user.is_authenticated:
-            return HttpResponse("User not logged in") #TODO change
 
         polls = user.assigned_polls.filter(pollassignment__completed_date__isnull=True)
         if polls.count() == 0: #TODO return "no polls available for user"

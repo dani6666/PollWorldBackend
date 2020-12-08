@@ -26,6 +26,9 @@ class PollAssignment(models.Model):
     assigned_date = models.DateTimeField()
     completed_date = models.DateTimeField(null=True)
 
+class QuestionOption(models.Model):
+    option = models.CharField(max_length=100)
+
 class Question(models.Model):
     QUESTION_TYPES = [
         (0, 'single_choice'),
@@ -35,10 +38,7 @@ class Question(models.Model):
     poll = models.ForeignKey(Poll, related_name='questions', on_delete=models.CASCADE)
     type = models.IntegerField(choices=QUESTION_TYPES)
     text = models.TextField(max_length=500)
-
-class QuestionOption(models.Model):
-    question = models.ForeignKey(Question, related_name='options', on_delete=models.CASCADE)
-    option = models.CharField(max_length=100)
+    options = models.ManyToManyField(QuestionOption)
 
 class Answer(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
