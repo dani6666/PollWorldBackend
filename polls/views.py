@@ -1,6 +1,7 @@
 from django.views import View
 from django.http import HttpResponse
 
+import random
 import datetime
 
 from rest_framework import generics
@@ -15,40 +16,50 @@ from accounts.views import CustomUser
 #create polls for testing
 def create_polls(user: CustomUser):
     def get_organizations():
-        orgs = Organization.objects.all()
+        orgs = Company.objects.all()
         count = orgs.count()
-        if count < 5:
-            while count < 5:
-                org = Organization(name="sample org" + str(count))
-                org.save()
-                count += 1
-            orgs = Organization.objects.all()
+        while count < 5:
+            org = Company(name="Firma nr " + str(count))
+            org.save()
+            count += 1
+        orgs = Company.objects.all()
         return orgs[0:5]
 
+    def get_categories():
+        categories = Category.objects.all()
+        count = categories.count()
+        while count < 5:
+            cat = Category(name="Kategoria nr " + str(count))
+            cat.save()
+            count += 1
+        categories = Category.objects.all()
+        return categories[0:5]
+
     orgs = get_organizations()
+    categories = get_categories()
     for i in range(5):
-        poll = Poll(name="sample poll" + str(i), organization=orgs[i], description="description", time_needed=datetime.time(0, 5 + i, 0), rating=3.6)
+        poll = Poll(name="Ankieta nr: " + str(i), company=orgs[i], price=random.randint(10, 50) * 10, category=categories[i], short_description="Krótki opis", description="Długi opis ankiety", time_needed=datetime.time(0, random.randint(5, 15), 0), rating=random.uniform(1, 5))
         poll.save()
 
-        question = Question(poll=poll, type=0, text="single choice question")
+        question = Question(poll=poll, type=0, text="Pytanie jednokrotnego wyboru")
         question.save()
 
-        option = QuestionOption(question=question, option="option1")
+        option = QuestionOption(question=question, option="Opcja 1")
         option.save()
 
-        option = QuestionOption(question=question, option="option2")
+        option = QuestionOption(question=question, option="Opcja 2")
         option.save()
 
-        question = Question(poll=poll, type=1, text="multi choice question")
+        question = Question(poll=poll, type=1, text="Pytanie wielokrotnego wyboru")
         question.save()
 
-        option = QuestionOption(question=question, option="option1")
+        option = QuestionOption(question=question, option="Opcja 1")
         option.save()
 
-        option = QuestionOption(question=question, option="option2")
+        option = QuestionOption(question=question, option="Opcja 2")
         option.save()
 
-        question = Question(poll=poll, type=2, text="open question")
+        question = Question(poll=poll, type=2, text="Pytanie otwarte")
         question.save()
 
         assignment = PollAssignment(user=user, poll=poll, assigned_date=datetime.datetime.now(), completed_date=None)
@@ -74,11 +85,14 @@ class GetUserPolls(generics.RetrieveAPIView):
         for poll in polls:
             response.append({
                 'id': poll.pk,
-                'organization': poll.organization.name,
+                'company': poll.company.name,
                 'name': poll.name,
-                'time_needed': str(poll.time_needed),
+                'price': poll.price,
+                'category': poll.category.name,
+                'short-descripption': poll.short_description,
                 'description': poll.description,
-                'rating': poll.rating
+                'time': str(poll.time_needed),
+                'rate': poll.rating
             })
 
         return Response(response)
@@ -114,11 +128,14 @@ class GetPoll(generics.RetrieveAPIView):
 
         response = {
             'id': poll.pk,
-            'organization': poll.organization.name,
+            'company': poll.company.name,
             'name': poll.name,
-            'time_needed': str(poll.time_needed),
+            'price': poll.price,
+            'category': poll.category.name,
+            'short-descripption': poll.short_description,
             'description': poll.description,
-            'rating': poll.rating,
+            'time': str(poll.time_needed),
+            'rate': poll.rating,
             'questions': questions
         }
 

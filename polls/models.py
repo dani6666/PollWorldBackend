@@ -3,12 +3,18 @@ from accounts.models import CustomUser
 
 # Create your models here.
 
-class Organization(models.Model):
+class Company(models.Model):
     name = models.CharField(max_length=100)
 
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+
 class Poll(models.Model):
-    organization = models.ForeignKey(Organization, related_name='polls', on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, related_name='polls', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
+    price = models.IntegerField()
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
+    short_description = models.TextField(max_length=50)
     description = models.TextField(max_length=500)
     time_needed = models.TimeField()
     rating = models.FloatField()
