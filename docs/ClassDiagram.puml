@@ -5,6 +5,12 @@ class Pools{
 }
 Pools "1" -- "0..*" PoolAssignments
 Pools "1" -- "1..*" Questions
+Pools "1" -- "1..*" Category
+
+class Category{
+    int: Id PK notnull
+    int: Name FK notnull
+}
 
 class Users{
     int: Id
@@ -12,10 +18,10 @@ class Users{
 Users "1" -- "0..*" PoolAssignments
 Users "1" -- "0..*" Answers
 
-class Organizations{
+class Companies{
     int: id
 }
-Organizations"1" -- "0..*" Pools
+Companies "1" -- "0..*" Pools
 
 class PoolAssignments{
     int: userId

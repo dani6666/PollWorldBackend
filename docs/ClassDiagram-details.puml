@@ -1,15 +1,23 @@
 @startuml
 class Pools{
     int: Id PK notnull
-    int: OrganizationId FK notnull
+    int: CompanyId FK notnull
     varchar: Name notnull
+    float: Price
+    varchar: ShortDescription
     varchar: Description
-    time: TimeNeeded
+    time: Time
     float: Rate
     int: Reviews
 }
 Pools "1" -- "0..*" PoolAssignments
 Pools "1" -- "1..*" Questions
+Pools "1" -- "1..*" Category
+
+class Category{
+    int: Id PK notnull
+    int: Name FK notnull
+}
 
 class Users{
     int: Id PK notnull
@@ -32,11 +40,11 @@ class PlacesOfResidence{
     varchar: Name
 }
 
-class Organizations{
+class Companies{
     int: Id PK notnull
     varchar: Name
 }
-Organizations "1" -- "0..*" Pools
+Companies "1" -- "0..*" Pools
 
 class PoolAssignments{
     int: UserId FK notnull
