@@ -97,7 +97,7 @@ DATABASES = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(weeks=3)
+    'REFRESH_TOKEN_LIFETIME': timedelta(weeks=8)
 }
 
 AUTH_PASSWORD_VALIDATORS = [
