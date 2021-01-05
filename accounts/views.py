@@ -30,10 +30,9 @@ class ChangeUserView(generics.UpdateAPIView):
             if serializer.is_valid():
                 self.object.save()
                 response = {
-                    'status': 'success',
+                    'status': 'Success',
                     'code': status.HTTP_200_OK,
                     'message': 'Password updated successfully',
-                    'data': []
                 }
 
                 return Response(response)
@@ -80,10 +79,9 @@ class ChangePersonalDataView(generics.UpdateAPIView):
 
         self.object.save()
         response = {
-            'status': 'success',
+            'status': 'Success',
             'code': status.HTTP_200_OK,
             'message': 'Personal data updated successfully',
-            'data': []
         }
 
         return Response(response)
@@ -91,7 +89,7 @@ class ChangePersonalDataView(generics.UpdateAPIView):
 
 class GetPersonalDataView(generics.RetrieveAPIView):
     """
-    An endpoint for changing personal user data.
+    An endpoint for getting personal user data.
     """
     serializer_class = UserSerializer
     model = CustomUser
@@ -109,11 +107,4 @@ class GetPersonalDataView(generics.RetrieveAPIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        response = {
-            'status': 'success',
-            'code': status.HTTP_200_OK,
-            'message': 'Personal data updated successfully',
-            'data': self.object.to_json()
-        }
-
-        return Response(response)
+        return Response(self.object.to_json())
