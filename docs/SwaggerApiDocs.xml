@@ -146,6 +146,33 @@ paths:
           description: Poll not assigned to a user
         '404':
           description: Poll not found
+    post:
+      summary: 'Posts anwear for a poll'
+      operationId: postPollAnswear
+      tags:
+        - poll
+      parameters:
+      - in: path
+        name: pollId
+        type: integer
+        required: True
+      - in: "header"
+        name: "Authorization"
+        type: "string"
+        description: "e.g. Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA3MzMzOTAwLCJqdGkiOiJmMWRiY2EzYzRiMTU0NTg5YTA1ZGRiZTY4M2QyZDA3MyIsInVzZXJfaWQiOjF9.5qBocwFvBvF791POe8sETBECis0GCcRTWHPSNvABtXw"
+      - in: "body"
+        name: "answears"
+        schema:
+          $ref: '#/definitions/PollAnswear'
+      responses:
+        '200':
+          description: 'Answear received'
+        '401':
+          description: Wrong refresh token
+        '403':
+          description: Poll not assigned to a user
+        '404':
+          description: Poll not found
 definitions:
   UserCredentials:
       type: object
@@ -255,3 +282,16 @@ definitions:
                     type: integer
                   option:
                     type: string
+  PollAnswear:
+    type: array
+    items:
+      type: object
+      properties:
+        questionId:
+          type: integer
+        optionIds:
+          type: array
+          items:
+            type: integer
+        answearText:
+          type: string
