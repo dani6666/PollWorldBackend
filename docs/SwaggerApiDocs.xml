@@ -82,7 +82,7 @@ paths:
             $ref: '#/definitions/UserPersonalData'
         '401':
           description: Wrong refresh token
-  /accounts/update:
+  /accounts/personal_update:
     put:
       summary: 'Updates user personal data (without password)'
       operationId: updateUser
@@ -102,6 +102,50 @@ paths:
           description: 'User updated successfully'
         '401':
           description: Wrong refresh token
+  /polls/all:
+    get:
+      summary: 'Returns all the polls assigned to user'
+      operationId: getPolls
+      tags:
+        - poll
+      parameters:
+      - in: "header"
+        name: "Authorization"
+        type: "string"
+        description: "e.g. Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA3MzMzOTAwLCJqdGkiOiJmMWRiY2EzYzRiMTU0NTg5YTA1ZGRiZTY4M2QyZDA3MyIsInVzZXJfaWQiOjF9.5qBocwFvBvF791POe8sETBECis0GCcRTWHPSNvABtXw"
+      responses:
+        '200':
+          description: 'Polls retrieved successfully'
+          schema:
+            $ref: '#/definitions/PollsList'
+        '401':
+          description: Wrong refresh token
+  /polls/{pollId}:
+    get:
+      summary: 'Returns all the polls assigned to user'
+      operationId: getPollById
+      tags:
+        - poll
+      parameters:
+      - in: path
+        name: pollId
+        type: integer
+        required: True
+      - in: "header"
+        name: "Authorization"
+        type: "string"
+        description: "e.g. Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA3MzMzOTAwLCJqdGkiOiJmMWRiY2EzYzRiMTU0NTg5YTA1ZGRiZTY4M2QyZDA3MyIsInVzZXJfaWQiOjF9.5qBocwFvBvF791POe8sETBECis0GCcRTWHPSNvABtXw"
+      responses:
+        '200':
+          description: 'Poll retrieved successfully'
+          schema:
+            $ref: '#/definitions/Poll'
+        '401':
+          description: Wrong refresh token
+        '403':
+          description: Poll not assigned to a user
+        '404':
+          description: Poll not found
 definitions:
   UserCredentials:
       type: object
@@ -137,13 +181,77 @@ definitions:
         type: boolean
       profession:
         type: string
-      place_of_residence:
+      placeOfResidence:
         type: integer
         enum: [1,2,3]
       growth:
         type: integer
       weight:
         type: integer
-      level_of_fitness:
+      levelOfFitness:
         type: integer
         enum: [1,2,3,4,5]
+  PollsList:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        company:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+        shortDescripption:
+          type: string
+        description:
+          type: string
+        time:
+          type: string
+        rate:
+          type: number
+  Poll:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      company:
+        type: string
+      price:
+        type: number
+      category:
+        type: string
+      shortDescripption:
+        type: string
+      description:
+        type: string
+      time:
+        type: string
+      rate:
+        type: number
+      questions:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+            type:
+              type: string
+            text:
+              type: string
+            options:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  option:
+                    type: string
