@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_social_auth',
 
     'accounts',
+    'polls'
 ]
 
 MIDDLEWARE = [
