@@ -1,0 +1,4 @@
+django
+djangorestframework-simplejwt
+rest-social-auth
+django-cors-headers
