@@ -14,7 +14,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         data.update({'user': self.user.email})
         data.update({'id': self.user.id})
-        data.update({'id': self.user.age})
 
         return data
 
