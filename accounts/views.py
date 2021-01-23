@@ -22,12 +22,9 @@ class UserViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'], serializer_class=RegisterSerializer, permission_classes=[AllowAny])
     def register(self, request):
-        print(request.data)
         serializer = RegisterSerializer(data=request.data)
-        print(serializer)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        print(user)
         return Response({
             "user": UserSerializer(user).data,
             "message": "User Created Successfully.  Now perform Login to get your token",
