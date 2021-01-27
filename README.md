@@ -1,5 +1,5 @@
 # PollWorldBackend
-Server-side django application for PollWorld project
+Server-side django application for PollWorld project  
 
 To run current released version of app from any place without repository files:  
 docker pull dani6666/poll_world_server  
