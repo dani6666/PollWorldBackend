@@ -167,6 +167,8 @@ paths:
       responses:
         '200':
           description: 'Answear received'
+        '400':
+          description: 'Wrong request format'
         '401':
           description: Wrong refresh token
         '403':
@@ -218,6 +220,8 @@ definitions:
       levelOfFitness:
         type: integer
         enum: [1,2,3,4,5]
+      points:
+        type: integer
   PollsList:
     type: array
     items:
