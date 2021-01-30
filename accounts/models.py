@@ -38,6 +38,8 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
     username = None
 
+    points = models.IntegerField(default=0)
+
     objects = UserManager()
 
     def to_json(self):
@@ -49,5 +51,6 @@ class CustomUser(AbstractUser):
             'placeOfResidence': self.place_of_residence,
             'growth': self.growth,
             'weight': self.weight,
-            'levelOfFitness': self.level_of_fitness
+            'level_of_fitness': self.level_of_fitness,
+            'points': self.points
         }
