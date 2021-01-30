@@ -1,0 +1,96 @@
+@startuml
+class Pools{
+    int: Id PK notnull
+    int: CompanyId FK notnull
+    varchar: Name notnull
+    float: Price
+    varchar: ShortDescription
+    varchar: Description
+    time: Time
+    float: Rate
+    int: Reviews
+}
+Pools "1" -- "0..*" PoolAssignments
+Pools "1" -- "1..*" Questions
+Pools "1" -- "1..*" Category
+
+class Category{
+    int: Id PK notnull
+    int: Name FK notnull
+}
+
+class Users{
+    int: Id PK notnull
+    varchar: Username notnull
+    varchar: Password
+    varchar: Name
+    int: Age
+    bit: Sex
+    int: PlaceOfResidenceId FK
+    int: Height
+    int: Wegiht
+    int: FitnessLevel
+}
+Users "1" -- "0..*" PoolAssignments
+Users "1" -- "0..*" Answers
+Users "1..*" - "1" PlacesOfResidence
+
+class PlacesOfResidence{
+    int: Id PK notnull
+    varchar: Name
+}
+
+class Companies{
+    int: Id PK notnull
+    varchar: Name
+}
+Companies "1" -- "0..*" Pools
+
+class PoolAssignments{
+    int: UserId FK notnull
+    int: PoolId FK notnull
+    datetime: AssignedDate notnull
+    datetime: CompletedDate
+}
+
+class Questions{
+    int: Id PK notnull
+    int: TypeId FK notnull
+    varchar: Text notnull
+}
+Questions "1" --- "0..*" QuestionOptions
+Questions "1" -- "0..*" CustomQuestionAnswers
+Questions "1..*" -- "1" QuestionTypes
+
+class QuestionTypes{
+    int: Id PK notnull
+    string: Type notnull
+}
+
+class Options{
+    int: Id PK notnull
+    varchar: Text notnull
+}
+Options "1" - "1..*" QuestionOptions
+
+class QuestionOptions{
+    long: Id PK notnull
+    int: OptionId FK notnull
+    int: QuestionId FK notnull
+}
+
+class CustomQuestionAnswers{
+    long: Id PK notnull
+    int: QuestionId FK notnull
+    varchar: AnswerText
+    int: AnswerNumber
+}
+
+class Answers{
+    int: UserId FK notnull
+    long: QuestionOptionId FK
+    long: CustomQuestionAnswerId FK
+}
+Answers "1" --- "0..*" QuestionOptions
+Answers "1" -- "0..*" CustomQuestionAnswers
+@enduml

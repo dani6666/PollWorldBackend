@@ -48,7 +48,7 @@ class CustomUser(AbstractUser):
             'age': self.age,
             'sex': self.sex,
             'profession': self.profession,
-            'place_of_residence': self.place_of_residence,
+            'placeOfResidence': self.place_of_residence,
             'growth': self.growth,
             'weight': self.weight,
             'level_of_fitness': self.level_of_fitness,
