@@ -51,6 +51,6 @@ class CustomUser(AbstractUser):
             'placeOfResidence': self.place_of_residence,
             'growth': self.growth,
             'weight': self.weight,
-            'level_of_fitness': self.level_of_fitness,
+            'levelOfFitness': self.level_of_fitness,
             'points': self.points
         }

@@ -193,4 +193,4 @@ class GetPoll(generics.RetrieveAPIView):
         for ans in anwsers_to_save:
             ans.save()
         
-        return Response(status=status.HTTP_200_OK)
+        return Response("Answers submitted", status=status.HTTP_200_OK)
