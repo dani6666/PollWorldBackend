@@ -101,7 +101,7 @@ class GetCopoun(generics.RetrieveAPIView):
     def get(self, request, copoun_id):
         copoun = get_object_or_404(Copoun, pk=copoun_id)
 
-        if not self.request.user in copoun.assigned_users.filter(pollassignment__completed_date__isnull=True):
+        if not self.request.user in copoun.assigned_users.filter():
             return Response("Copoun is not available for current user", status=status.HTTP_403_FORBIDDEN)
     
         response = {
@@ -118,7 +118,7 @@ class GetCopoun(generics.RetrieveAPIView):
     def post(self, request, copoun_id):
         copoun = get_object_or_404(Copoun, pk=copoun_id)
 
-        if not self.request.user in copoun.assigned_users.filter(pollassignment__completed_date__isnull=True):
+        if not self.request.user in copoun.assigned_users.filter():
             return Response("Copoun is not available for current user", status=status.HTTP_403_FORBIDDEN)
         
         try:
