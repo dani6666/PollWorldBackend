@@ -1,3 +1,5 @@
+import string
+
 from django.views import View
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -41,13 +43,14 @@ def create_copouns(user: CustomUser):
     for i in range(5):
         copoun = Copoun.objects.create(name="Kupon nr: " + str(i), company=orgs[i], price=random.randint(10, 50) * 10, category=categories[i], description="Długi opis ankiety")
 
-        assignment = CopounAssignment.objects.create(user=user, copoun=coupon, assigned_date=None)
+        assignment = CopounAssignment.objects.create(user=user, copoun=copoun, assigned_date=None)
 
 
 class GetCopouns(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
+        user = request.user
 
         copouns = Copoun.objects.all()
         if copouns.count() == 0:
@@ -75,21 +78,19 @@ class GetUserCopouns(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
 
-        copouns = user.assigned_copouns.all()
-        if copouns.count() == 0:
-            create_copouns(user)
-            copouns = user.assigned_copouns.all()
+        copoun_assignments = CopounAssignment.objects.all(user=user)
 
         response = []
 
-        for copoun in copouns:
+        for copoun_assignment in copoun_assignments:
             response.append({
-                'id': copoun.pk,
-                'company': copoun.company.name,
-                'name': copoun.name,
-                'price': copoun.price,
-                'category': copoun.category.name,
-                'description': copoun.description,
+                'id': copoun_assignment.copoun.pk,
+                'company': copoun_assignment.copoun.company.name,
+                'name': copoun_assignment.copoun.name,
+                'price': copoun_assignment.copoun.price,
+                'category': copoun_assignment.copoun.category.name,
+                'description': copoun_assignment.copoun.description,
+                'code': copoun_assignment.code
             })
 
         return Response(response)
@@ -98,31 +99,15 @@ class GetUserCopouns(generics.RetrieveAPIView):
 class GetCopoun(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, copoun_id):
-        copoun = get_object_or_404(Copoun, pk=copoun_id)
-
-        if not self.request.user in copoun.assigned_users.filter():
-            return Response("Copoun is not available for current user", status=status.HTTP_403_FORBIDDEN)
-    
-        response = {
-            'id': copoun.pk,
-            'company': copoun.company.name,
-            'name': copoun.name,
-            'price': copoun.price,
-            'category': copoun.category.name,
-            'description': copoun.description,
-        }
-
-        return Response(response)
-
     def post(self, request, copoun_id):
         copoun = get_object_or_404(Copoun, pk=copoun_id)
 
-        if not self.request.user in copoun.assigned_users.filter():
-            return Response("Copoun is not available for current user", status=status.HTTP_403_FORBIDDEN)
-        
+        if copoun.price > request.user.points:
+            return Response("User can't afford copoun", status=status.HTTP_403_FORBIDDEN)
+
         try:
-            copoun_assingnment = CopounAssignment(user=request.user, copoun=copoun)
+            copoun_assingnment = CopounAssignment(user=request.user, copoun=copoun,
+                                                  code=''.join(random.choices(string.ascii_uppercase + string.digits, k=10)))
             copoun_assingnment.assigned_date = datetime.now()
             copoun_assingnment.save()
 

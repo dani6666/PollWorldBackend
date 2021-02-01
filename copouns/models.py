@@ -22,6 +22,7 @@ class CopounAssignment(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     coupon = models.ForeignKey(Copoun, on_delete=models.CASCADE)
     assigned_date = models.DateTimeField(auto_now_add=True)
+    code = models.CharField(max_length=10, null=True)
 
 
 
