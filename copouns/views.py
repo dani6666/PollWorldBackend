@@ -48,10 +48,35 @@ class GetCopouns(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
+
+        copouns = Copoun.objects.all()
+        if copouns.count() == 0:
+            create_copouns(user)
+            copouns = user.assigned_copouns.all()
+
+        response = []
+
+        for copoun in copouns:
+            response.append({
+                'id': copoun.pk,
+                'company': copoun.company.name,
+                'name': copoun.name,
+                'price': copoun.price,
+                'category': copoun.category.name,
+                'description': copoun.description,
+            })
+
+        return Response(response)
+
+
+class GetUserCopouns(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
         user = self.request.user
 
         copouns = user.assigned_copouns.all()
-        if copouns.count() == 0: #TODO return "no polls available for user"
+        if copouns.count() == 0:
             create_copouns(user)
             copouns = user.assigned_copouns.all()
 
