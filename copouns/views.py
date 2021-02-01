@@ -75,7 +75,7 @@ class GetUserCopouns(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
 
-        copoun_assignments = CopounAssignment.objects.all(user=user)
+        copoun_assignments = CopounAssignment.objects.filter(user=user)
 
         response = []
 
