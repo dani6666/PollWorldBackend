@@ -10,11 +10,12 @@ class Category(models.Model):
     name = models.CharField(max_length=50)
 
 class Copoun(models.Model):
-    company = models.ForeignKey(Company, related_name='polls', on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, related_name='coupons', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     price = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
     description = models.TextField(max_length=500)
+    assigned_users = models.ManyToManyField(CustomUser, related_name='assigned_copouns', through='CopounAssignment')
 
 class CouponAssignment(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
