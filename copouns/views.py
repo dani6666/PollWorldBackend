@@ -43,9 +43,6 @@ def create_copouns(user: CustomUser):
     for i in range(5):
         copoun = Copoun.objects.create(name="Kupon nr: " + str(i), company=orgs[i], price=random.randint(10, 50) * 10, category=categories[i], description="Długi opis ankiety")
 
-        assignment = CopounAssignment.objects.create(user=user, copoun=copoun, assigned_date=None)
-
-
 class GetCopouns(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
@@ -55,7 +52,7 @@ class GetCopouns(generics.RetrieveAPIView):
         copouns = Copoun.objects.all()
         if copouns.count() == 0:
             create_copouns(user)
-            copouns = user.assigned_copouns.all()
+            copouns = Copoun.objects.all()
 
         response = []
 
