@@ -81,12 +81,12 @@ class GetUserCopouns(generics.RetrieveAPIView):
 
         for copoun_assignment in copoun_assignments:
             response.append({
-                'id': copoun_assignment.copoun.pk,
-                'company': copoun_assignment.copoun.company.name,
-                'name': copoun_assignment.copoun.name,
-                'price': copoun_assignment.copoun.price,
-                'category': copoun_assignment.copoun.category.name,
-                'description': copoun_assignment.copoun.description,
+                'id': copoun_assignment.coupon.pk,
+                'company': copoun_assignment.coupon.company.name,
+                'name': copoun_assignment.coupon.name,
+                'price': copoun_assignment.coupon.price,
+                'category': copoun_assignment.coupon.category.name,
+                'description': copoun_assignment.coupon.description,
                 'code': copoun_assignment.code
             })
 
@@ -103,7 +103,7 @@ class GetCopoun(generics.RetrieveAPIView):
             return Response("User can't afford copoun", status=status.HTTP_403_FORBIDDEN)
 
         try:
-            copoun_assingnment = CopounAssignment(user=request.user, copoun=copoun,
+            copoun_assingnment = CopounAssignment(user=request.user, coupon=copoun,
                                                   code=''.join(random.choices(string.ascii_uppercase + string.digits, k=10)))
             copoun_assingnment.assigned_date = datetime.now()
             copoun_assingnment.save()
