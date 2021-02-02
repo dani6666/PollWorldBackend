@@ -22,6 +22,7 @@ class UserViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'], serializer_class=RegisterSerializer, permission_classes=[AllowAny])
     def register(self, request):
+        print("Hello World !")
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
