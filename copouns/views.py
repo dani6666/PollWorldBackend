@@ -41,7 +41,7 @@ def create_copouns(user: CustomUser):
     orgs = get_organizations()
     categories = get_categories()
     for i in range(5):
-        copoun = Copoun.objects.create(name="Kupon nr: " + str(i), company=orgs[i], price=random.randint(10, 50) * 10, category=categories[i], description="Długi opis ankiety")
+        copoun = Copoun.objects.create(name="Kupon nr: " + str(i), company=orgs[i], price=random.randint(10, 50) * 5, category=categories[i], description="Opis kuponu " + str(i))
 
 class GetCopouns(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
